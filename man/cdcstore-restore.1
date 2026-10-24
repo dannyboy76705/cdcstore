@@ -1,0 +1,40 @@
+.TH CDCSTORE-RESTORE 1 "October 2026" "cdcstore" "User Commands"
+.SH NAME
+cdcstore\-restore \- restore files from a cdcstore repository
+.SH SYNOPSIS
+.B cdcstore\-restore
+[\-o OUTDIR] [\-f] [\-q] REPO [PATTERN...]
+.SH DESCRIPTION
+Restores files from a repository. REPO is the repository folder, or a folder that holds .cdcstore (as cdcstore\-add \-X makes). With no PATTERN everything is restored. A PATTERN is a path (a file, or a folder with everything in it) or a wildcard (* ? [..]) matched against the stored path; a wildcard also takes in what is below a matching folder. Quote wildcards so the shell leaves them alone.
+.PP
+Files are written under OUTDIR with their stored paths, modes and times. Every chunk file of the restored files must be present.
+.SH OPTIONS
+.TP
+.B \-o DIR
+Restore under DIR (default: the current folder; made if missing).
+.TP
+.B \-f
+Overwrite files that already exist. Otherwise they are skipped and reported.
+.TP
+.B \-q
+Quiet.
+.TP
+.B \-h
+Print help.
+.SH EXAMPLES
+.nf
+.RS
+cdcstore\-restore \-o out REPO
+cdcstore\-restore \-o out REPO 'GAMES/DOOM*' '*.EXE'
+.RE
+.fi
+.sp
+.SH AUTHOR
+Daniel Lee Witzel. MIT license (see the LICENSE file shipped with the source).
+.SH SEE ALSO
+.BR cdcstore (7),
+.BR cdcstore\-add (1),
+.BR cdcstore\-list (1),
+.BR cdcstore\-remove (1),
+.BR cdcstore\-verify (1),
+.BR cdcstore\-mount (1)

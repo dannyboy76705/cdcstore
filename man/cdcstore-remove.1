@@ -1,0 +1,37 @@
+.TH CDCSTORE-REMOVE 1 "October 2026" "cdcstore" "User Commands"
+.SH NAME
+cdcstore\-remove \- take files out of a cdcstore repository
+.SH SYNOPSIS
+.B cdcstore\-remove
+[\-n] [\-q] REPO PATTERN...
+.SH DESCRIPTION
+Removes the matching entries from the repository's index and deletes their chunk files. Every chunk belongs to a single file, so nothing else is affected. The chunk numbers of the other files do not change, so chunk file names stay stable for whatever has already been archived or sorted.
+.PP
+A PATTERN is a path (a file, or a folder with its contents) or a quoted wildcard (* ? [..]).
+.SH OPTIONS
+.TP
+.B \-n
+Only show what would be removed.
+.TP
+.B \-q
+Quiet.
+.TP
+.B \-h
+Print help.
+.SH EXAMPLES
+.nf
+.RS
+cdcstore\-remove \-n REPO 'old/*'
+cdcstore\-remove REPO games/DOOM
+.RE
+.fi
+.sp
+.SH AUTHOR
+Daniel Lee Witzel. MIT license (see the LICENSE file shipped with the source).
+.SH SEE ALSO
+.BR cdcstore (7),
+.BR cdcstore\-add (1),
+.BR cdcstore\-list (1),
+.BR cdcstore\-restore (1),
+.BR cdcstore\-verify (1),
+.BR cdcstore\-mount (1)

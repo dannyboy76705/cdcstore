@@ -1,0 +1,29 @@
+.TH CDCSTORE-VERIFY 1 "October 2026" "cdcstore" "User Commands"
+.SH NAME
+cdcstore\-verify \- check a cdcstore repository
+.SH SYNOPSIS
+.B cdcstore\-verify
+[\-q] [\-c DIR] REPO [PATTERN...]
+.SH DESCRIPTION
+Reads the selected files back out of the chunk files. Every chunk file must have its recorded length and match its hash, and sizes and file hashes must match the index. With \-c each file is also compared byte for byte with the original.
+.PP
+The exit status is 0 if everything is good and 2 if problems were found.
+.SH OPTIONS
+.TP
+.B \-c DIR
+Also compare each file with the original at DIR/PATH. Originals that no longer exist are skipped.
+.TP
+.B \-q
+Quiet (problems are still reported).
+.TP
+.B \-h
+Print help.
+.SH AUTHOR
+Daniel Lee Witzel. MIT license (see the LICENSE file shipped with the source).
+.SH SEE ALSO
+.BR cdcstore (7),
+.BR cdcstore\-add (1),
+.BR cdcstore\-list (1),
+.BR cdcstore\-restore (1),
+.BR cdcstore\-remove (1),
+.BR cdcstore\-mount (1)

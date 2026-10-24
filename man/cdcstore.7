@@ -1,0 +1,40 @@
+.TH CDCSTORE 7 "October 2026" "cdcstore" "Miscellaneous"
+.SH NAME
+cdcstore \- a repository of files cut into chunks, with an index
+.SH DESCRIPTION
+cdcstore keeps files as chunks, one chunk per file, with a single index. It prepares data for an archiver; it does not compress, deduplicate or pack anything itself. Finding what repeats is the job of the sorter (sortof\-cdcsort) and the container (tar and zstd, zfrag, DwarFS and so on). Adding or removing one item is one command, so a collection that has to fit a disc can be adjusted one file at a time.
+.SH THE REPOSITORY
+A repository is a directory:
+.PP
+.nf
+.RS
+cdcstore.idx                      the index, rewritten atomically after every change
+chunks/bNNNNN/cNNNNNNNNN             every chunk as its own file, raw bytes, 5000 per bucket folder
+.RE
+.fi
+.sp
+Chunks are numbered in the order they first appear, so the natural order of the chunk files is the order the data was added. A chunk belongs to one file and never spans two files. Numbers are never reused, so removing a file does not rename any other chunk and a list that was already sorted or archived stays valid.
+.PP
+The index is little endian, every section starts on an eight\-byte boundary and every table is a plain array of packed records, so a mount can map it and use it as it is. It holds a header (magic CDCSTOR1, version, sizes, a checksum), the chunk table, the entries sorted by path (so a lookup is a binary search and a folder is followed by everything inside it), the chunk list of every file with its offsets, and the path strings. The full layout is described at the top of cdcstore\-common.h in the source.
+.SH PROGRAMS
+cdcstore\-add stores files, cdcstore\-remove takes them out, cdcstore\-restore restores them, cdcstore\-list lists them (and prints the chunk list with \-k), cdcstore\-verify checks them, and cdcstore\-mount mounts the repository read\-only.
+.SH TO AN ARCHIVE
+.nf
+.RS
+cdcstore\-list \-k REPO | sortof\-cdcsort \- > list.txt
+zfrag pack \-T list.txt \-o set.tar.zfrag
+.RE
+.fi
+.sp
+Anything that restores from the archive needs all the chunk files of the files it restores. zfrag mount shows the files a repository inside an archive holds, under virtual/, without extracting it.
+.SH AUTHOR
+Daniel Lee Witzel. MIT license (see the LICENSE file shipped with the source).
+.SH SEE ALSO
+.BR cdcstore\-add (1),
+.BR cdcstore\-list (1),
+.BR cdcstore\-restore (1),
+.BR cdcstore\-remove (1),
+.BR cdcstore\-verify (1),
+.BR cdcstore\-mount (1),
+.BR sortof\-cdcsort (1),
+.BR zfrag (1)

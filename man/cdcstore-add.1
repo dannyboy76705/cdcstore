@@ -1,0 +1,58 @@
+.TH CDCSTORE-ADD 1 "October 2026" "cdcstore" "User Commands"
+.SH NAME
+cdcstore\-add \- store files in a cdcstore repository
+.SH SYNOPSIS
+.B cdcstore\-add
+\-d DEST [options] SOURCE...
+.br
+.B cdcstore\-add
+\-X [options] DIR
+.SH DESCRIPTION
+Stores files in a cdcstore repository: each file is cut into content\-defined chunks (a file up to \-s bytes is a single chunk) and every chunk is written as its own file. Nothing is deduplicated, compressed or packed here; that is the job of the sorter and the archiver, which take the chunk list from cdcstore\-list \-k.
+.PP
+A SOURCE is a directory (scanned recursively), a file, or \- for a list of paths on standard input, stored in the order given. Nothing is sorted here, so any sorter fits. Paths are stored without a leading / or ./ and may not contain ... Adding to an existing repository keeps that repository's \-a and \-s.
+.SH OPTIONS
+.TP
+.B \-d DEST
+Store into the repository DEST (made if it is new). The originals stay where they are.
+.TP
+.B \-X
+In place: DIR becomes the repository (DIR/.cdcstore). The originals in DIR are DELETED once they are stored and a full check has passed. A notice is printed, and you are asked first unless \-y is given.
+.TP
+.B \-a N
+Average chunk size for files above \-s (default 16384; rounded to a power of two between 1 KiB and 4 MiB). Only matters for a new repository.
+.TP
+.B \-s N
+Files up to N bytes are stored whole, as one chunk (default 65536). Only matters for a new repository.
+.TP
+.B \-C DIR
+Store paths relative to DIR, like tar \-C. A path that is not under DIR is an error.
+.TP
+.B \-y
+With \-X: do not ask before deleting (the DANGER notice is still printed).
+.TP
+.B \-S
+Skip the final sync of the disk. Faster, but after a power cut cdcstore\-verify can find missing chunk files.
+.TP
+.B \-q
+Quiet.
+.TP
+.B \-h
+Print help.
+.SH EXAMPLES
+.nf
+.RS
+cdcstore\-add \-d REPO /path/to/files
+find /path/to/files \-type f | sortof\-natural \- | cdcstore\-add \-d REPO \-
+.RE
+.fi
+.sp
+.SH AUTHOR
+Daniel Lee Witzel. MIT license (see the LICENSE file shipped with the source).
+.SH SEE ALSO
+.BR cdcstore (7),
+.BR cdcstore\-list (1),
+.BR cdcstore\-restore (1),
+.BR cdcstore\-remove (1),
+.BR cdcstore\-verify (1),
+.BR cdcstore\-mount (1)

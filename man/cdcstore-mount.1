@@ -1,0 +1,30 @@
+.TH CDCSTORE-MOUNT 1 "October 2026" "cdcstore" "User Commands"
+.SH NAME
+cdcstore\-mount \- mount a cdcstore repository read\-only (FUSE)
+.SH SYNOPSIS
+.B cdcstore\-mount
+[\-f] [\-d] [\-o OPTION,...] REPO MOUNTPOINT
+.SH DESCRIPTION
+Mounts a repository as a read\-only folder. The files appear with their stored paths, modes, times and links. A read fetches only the chunk files it touches. All chunk files must be present; a missing one makes the read fail with an error instead of returning wrong bytes. Nothing is cached or decoded: the repository is plain files.
+.PP
+REPO is a repository folder, or a folder that holds .cdcstore. Unmount with fusermount3 \-u MOUNTPOINT. Needs libfuse3.
+.SH OPTIONS
+.TP
+.B \-f
+Stay in the foreground; errors are printed to the terminal.
+.TP
+.B \-d
+Foreground, plus libfuse debug output.
+.TP
+.B \-o OPT,...
+Mount options passed to libfuse, such as allow_other.
+.SH AUTHOR
+Daniel Lee Witzel. MIT license (see the LICENSE file shipped with the source).
+.SH SEE ALSO
+.BR cdcstore (7),
+.BR cdcstore\-add (1),
+.BR cdcstore\-list (1),
+.BR cdcstore\-restore (1),
+.BR cdcstore\-remove (1),
+.BR cdcstore\-verify (1),
+.BR fusermount3 (1)

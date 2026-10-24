@@ -1,0 +1,41 @@
+.TH CDCSTORE-LIST 1 "October 2026" "cdcstore" "User Commands"
+.SH NAME
+cdcstore\-list \- list a cdcstore repository, or print its chunk files
+.SH SYNOPSIS
+.B cdcstore\-list
+[\-l] [\-s] [\-k] REPO [PATTERN...]
+.SH DESCRIPTION
+Without options, prints one stored path per line (folders end in /). With PATTERNs only the matching entries are listed. A PATTERN is a path (a file, or a folder with its contents) or a quoted wildcard; none means everything.
+.PP
+With \-k it prints the files to hand to a sorter and an archiver: the path of cdcstore.idx first (it belongs in the archive too), then the chunk files, one per line, in chunk\-number order, which is the order the data was added. The sortof tools keep cdcstore.idx first without sorting or reading it.
+.SH OPTIONS
+.TP
+.B \-l
+Long listing: type, mode, size, date and path.
+.TP
+.B \-s
+Print the repository's numbers instead: files, sizes, unique chunks, and the same for the selection.
+.TP
+.B \-k
+Print cdcstore.idx and then the chunk files. With PATTERNs, only the chunks those files use are printed, each once, in the order they are first used.
+.TP
+.B \-h
+Print help.
+.SH EXAMPLES
+.nf
+.RS
+cdcstore\-list \-l REPO 'games/*'
+cdcstore\-list \-k REPO | sortof\-cdcsort \- > list.txt
+.RE
+.fi
+.sp
+.SH AUTHOR
+Daniel Lee Witzel. MIT license (see the LICENSE file shipped with the source).
+.SH SEE ALSO
+.BR cdcstore (7),
+.BR cdcstore\-add (1),
+.BR cdcstore\-restore (1),
+.BR cdcstore\-remove (1),
+.BR cdcstore\-verify (1),
+.BR cdcstore\-mount (1),
+.BR sortof\-cdcsort (1)
